@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PR Mastery — Public Relations Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink: #0f0e0c;
+    --paper: #faf8f3;
+    --cream: #f0ece0;
+    --accent: #c8402a;
+    --accent2: #2a6ec8;
+    --gold: #d4a843;
+    --muted: #8a8070;
+    --card-bg: #ffffff;
+    --shadow: 0 4px 24px rgba(15,14,12,0.10);
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 28px 40px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+  .logo span { color: var(--gold); }
+  .tagline { font-size: 0.8rem; color: #b0a898; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
+
+  /* ── NAV TABS ── */
+  nav {
+    background: var(--cream);
+    border-bottom: 2px solid var(--ink);
+    display: flex;
+    gap: 0;
+  }
+  .tab-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 16px 32px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--muted);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .tab-btn:hover { color: var(--ink); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── MAIN CONTENT ── */
+  main { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── TOPIC FILTER ── */
+  .topic-filter {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 32px;
+  }
+  .filter-btn {
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 7px 16px; border-radius: 100px;
+    border: 2px solid var(--ink); background: transparent; cursor: pointer;
+    color: var(--ink); transition: all 0.2s;
+  }
+  .filter-btn:hover, .filter-btn.active { background: var(--ink); color: var(--paper); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap { margin-bottom: 28px; }
+  .progress-label { font-size: 0.8rem; color: var(--muted); margin-bottom: 6px; display: flex; justify-content: space-between; }
+  .progress-bar { height: 6px; background: var(--cream); border-radius: 99px; overflow: hidden; border: 1px solid #ddd; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.5s ease; }
+
+  /* ── FLASHCARD ── */
+  .flashcard-area { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+
+  .card-counter { font-size: 0.85rem; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .card-scene {
+    width: 100%; max-width: 640px;
+    height: 300px;
+    perspective: 1200px;
+    cursor: pointer;
+  }
+  .card-inner {
+    width: 100%; height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4,0.2,0.2,1);
+  }
+  .card-scene.flipped .card-inner { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute; inset: 0;
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    border: 2px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 36px 40px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .card-back { transform: rotateY(180deg); }
+
+  .card-label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 16px;
+  }
+  .card-topic-badge {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 100px;
+    background: var(--cream); border: 1.5px solid var(--ink);
+    color: var(--ink); margin-bottom: 20px;
+  }
+  .card-term {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.75rem; font-weight: 700; text-align: center; line-height: 1.2;
+  }
+  .card-definition {
+    font-size: 1rem; line-height: 1.7; text-align: center; color: #333;
+  }
+  .card-hint { font-size: 0.78rem; color: var(--muted); margin-top: 10px; font-style: italic; }
+  .flip-hint {
+    font-size: 0.78rem; color: var(--muted); display: flex; align-items: center; gap: 6px;
+  }
+  .flip-hint::before { content: "↺"; font-size: 1rem; }
+
+  /* Card controls */
+  .card-controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; justify-content: center; }
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; font-weight: 600;
+    padding: 10px 22px; border-radius: 8px;
+    border: 2px solid var(--ink);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .btn-primary { background: var(--ink); color: var(--paper); }
+  .btn-primary:hover { background: var(--accent); border-color: var(--accent); }
+  .btn-secondary { background: transparent; color: var(--ink); }
+  .btn-secondary:hover { background: var(--ink); color: var(--paper); }
+  .btn-success { background: #2a7a4b; border-color: #2a7a4b; color: white; }
+  .btn-danger { background: var(--accent); border-color: var(--accent); color: white; }
+
+  /* Mastery checkboxes */
+  .mastery-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .mastery-btn {
+    font-size: 0.78rem; font-weight: 600; padding: 7px 16px; border-radius: 8px;
+    border: 2px solid; cursor: pointer; transition: all 0.15s;
+  }
+  .mastery-btn.know { border-color: #2a7a4b; color: #2a7a4b; background: transparent; }
+  .mastery-btn.know:hover, .mastery-btn.know.active { background: #2a7a4b; color: white; }
+  .mastery-btn.review { border-color: var(--gold); color: #a07a20; background: transparent; }
+  .mastery-btn.review:hover, .mastery-btn.review.active { background: var(--gold); color: white; }
+
+  /* ── QUIZ ── */
+  .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
+  .quiz-score-badge {
+    font-size: 0.85rem; font-weight: 700;
+    background: var(--ink); color: var(--paper);
+    padding: 8px 18px; border-radius: 100px;
+  }
+  .question-card {
+    background: var(--card-bg); border: 2px solid var(--ink);
+    border-radius: var(--radius); box-shadow: 5px 5px 0 var(--ink);
+    padding: 32px 36px; margin-bottom: 24px;
+  }
+  .q-number { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .q-topic { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 100px; background: var(--cream); border: 1.5px solid #ccc; color: var(--muted); display: inline-block; margin-bottom: 14px; }
+  .q-text { font-family: 'Playfair Display', serif; font-size: 1.2rem; line-height: 1.5; margin-bottom: 24px; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 400;
+    text-align: left; padding: 14px 20px;
+    border-radius: 10px; border: 2px solid #ddd;
+    background: var(--paper); cursor: pointer;
+    transition: all 0.15s; line-height: 1.4;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--ink); background: var(--cream); }
+  .option-btn.correct { background: #eaf7ee; border-color: #2a7a4b; color: #1a5c36; font-weight: 600; }
+  .option-btn.incorrect { background: #fdecea; border-color: var(--accent); color: #8b1a0e; }
+  .option-btn:disabled { cursor: default; }
+  .feedback-box {
+    margin-top: 16px; padding: 14px 18px; border-radius: 10px;
+    font-size: 0.9rem; line-height: 1.6;
+    display: none;
+  }
+  .feedback-box.show { display: block; }
+  .feedback-box.correct { background: #eaf7ee; border: 1.5px solid #2a7a4b; color: #1a5c36; }
+  .feedback-box.incorrect { background: #fdecea; border: 1.5px solid var(--accent); color: #8b1a0e; }
+  .feedback-box strong { display: block; margin-bottom: 4px; }
+
+  .quiz-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+
+  /* Results */
+  .results-card {
+    background: var(--card-bg); border: 2px solid var(--ink);
+    border-radius: var(--radius); box-shadow: 6px 6px 0 var(--ink);
+    padding: 48px 40px; text-align: center;
+  }
+  .results-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem; font-weight: 900; color: var(--accent);
+    line-height: 1;
+  }
+  .results-label { font-size: 1rem; color: var(--muted); margin: 8px 0 24px; }
+  .results-message { font-size: 1.15rem; font-weight: 500; margin-bottom: 32px; line-height: 1.5; }
+  .results-breakdown { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
+  .rb-item { background: var(--cream); border-radius: 10px; padding: 14px 24px; text-align: center; }
+  .rb-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; }
+  .rb-num.green { color: #2a7a4b; }
+  .rb-num.red { color: var(--accent); }
+  .rb-text { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* ── PROGRESS SECTION ── */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .stat-card {
+    background: var(--card-bg); border: 2px solid var(--ink); border-radius: var(--radius);
+    box-shadow: 4px 4px 0 var(--ink); padding: 22px 20px; text-align: center;
+  }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 900; }
+  .stat-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 4px; }
+
+  .topic-progress { display: flex; flex-direction: column; gap: 14px; }
+  .tp-row { display: flex; flex-direction: column; gap: 5px; }
+  .tp-label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; }
+  .tp-bar { height: 8px; background: var(--cream); border-radius: 99px; overflow: hidden; border: 1px solid #ddd; }
+  .tp-fill { height: 100%; border-radius: 99px; transition: width 0.6s ease; }
+
+  /* section titles */
+  .section-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
+  .section-sub { font-size: 0.9rem; color: var(--muted); margin-bottom: 28px; }
+
+  @media (max-width: 600px) {
+    header { padding: 20px; }
+    .logo { font-size: 1.5rem; }
+    .tab-btn { padding: 12px 18px; font-size: 0.8rem; }
+    main { padding: 24px 16px 60px; }
+    .card-scene { height: 260px; }
+    .card-face { padding: 24px; }
+    .card-term { font-size: 1.4rem; }
+    .question-card { padding: 22px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">PR <span>Mastery</span></div>
+    <div class="tagline">Public Relations Study Guide</div>
+  </div>
+</header>
+
+<nav>
+  <button class="tab-btn active" onclick="showTab('flashcards')">📇 Flashcards</button>
+  <button class="tab-btn" onclick="showTab('quiz')">📝 Quiz</button>
+  <button class="tab-btn" onclick="showTab('progress')">📊 Progress</button>
+</nav>
+
+<main>
+
+  <!-- ══════════════ FLASHCARDS ══════════════ -->
+  <div id="flashcards" class="section active">
+    <h2 class="section-title">Flashcards</h2>
+    <p class="section-sub">Click a card to reveal the definition. Mark cards as you go.</p>
+
+    <div class="topic-filter" id="fc-filter"></div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Cards reviewed</span>
+        <span id="fc-progress-text">0 / 0</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="fc-progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="flashcard-area">
+      <div class="card-counter" id="fc-counter">Card 1 of 20</div>
+      <div class="card-scene" id="card-scene" onclick="flipCard()">
+        <div class="card-inner" id="card-inner">
+          <div class="card-face card-front">
+            <div class="card-topic-badge" id="fc-topic-badge">Topic</div>
+            <div class="card-label">Term</div>
+            <div class="card-term" id="fc-term">Loading…</div>
+            <div class="card-hint" id="fc-hint"></div>
+          </div>
+          <div class="card-face card-back">
+            <div class="card-label">Definition</div>
+            <div class="card-definition" id="fc-def">…</div>
+          </div>
+        </div>
+      </div>
+      <div class="flip-hint">Click card to flip</div>
+
+      <div class="mastery-row">
+        <button class="mastery-btn know" onclick="markCard('know')">✓ Got it</button>
+        <button class="mastery-btn review" onclick="markCard('review')">↩ Review later</button>
+      </div>
+
+      <div class="card-controls">
+        <button class="btn btn-secondary" onclick="prevCard()">← Prev</button>
+        <button class="btn btn-primary" onclick="nextCard()">Next →</button>
+        <button class="btn btn-secondary" onclick="shuffleCards()">⇌ Shuffle</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ QUIZ ══════════════ -->
+  <div id="quiz" class="section">
+    <div id="quiz-main">
+      <div class="quiz-header">
+        <div>
+          <h2 class="section-title">Multiple Choice Quiz</h2>
+          <p class="section-sub" style="margin:0">Test your PR knowledge with instant feedback.</p>
+        </div>
+        <div class="quiz-score-badge" id="quiz-score-badge">Score: 0 / 0</div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span id="quiz-progress-label">Question 1 of 20</span>
+          <span id="quiz-pct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="quiz-progress-fill" style="width:0%"></div></div>
+      </div>
+
+      <div class="question-card" id="question-card">
+        <div class="q-number" id="q-number">Question 1</div>
+        <div class="q-topic" id="q-topic">Topic</div>
+        <div class="q-text" id="q-text">Loading question…</div>
+        <div class="options" id="options"></div>
+        <div class="feedback-box" id="feedback-box"></div>
+      </div>
+
+      <div class="quiz-nav">
+        <button class="btn btn-secondary" onclick="restartQuiz()">↺ Restart</button>
+        <button class="btn btn-primary" id="next-q-btn" onclick="nextQuestion()" style="display:none">Next Question →</button>
+      </div>
+    </div>
+
+    <div id="quiz-results" style="display:none">
+      <div class="results-card">
+        <div class="results-score" id="r-score">—</div>
+        <div class="results-label">Final Score</div>
+        <div class="results-message" id="r-message"></div>
+        <div class="results-breakdown">
+          <div class="rb-item"><div class="rb-num green" id="r-correct">0</div><div class="rb-text">Correct</div></div>
+          <div class="rb-item"><div class="rb-num red" id="r-wrong">0</div><div class="rb-text">Wrong</div></div>
+          <div class="rb-item"><div class="rb-num" id="r-total">0</div><div class="rb-text">Questions</div></div>
+        </div>
+        <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ PROGRESS ══════════════ -->
+  <div id="progress" class="section">
+    <h2 class="section-title">Your Progress</h2>
+    <p class="section-sub">Track how your studies are going across all topics.</p>
+
+    <div class="stats-grid" id="stats-grid"></div>
+
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:16px;">Flashcard Mastery by Topic</h3>
+    <div class="topic-progress" id="topic-progress"></div>
+  </div>
+
+</main>
+
+<script>
+// ══════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════
+const TOPICS = {
+  "Media Relations": "#c8402a",
+  "Crisis Communication": "#2a6ec8",
+  "Branding": "#d4a843",
+  "Communication Strategy": "#2a7a4b"
+};
+
+const FLASHCARDS = [
+  // Media Relations
+  { topic:"Media Relations", term:"Media Relations", def:"The strategic management of interactions between an organisation and journalists, editors, and media outlets to shape public coverage and narrative.", hint:"Think of it as building bridges with the press." },
+  { topic:"Media Relations", term:"Press Release", def:"A written statement distributed to journalists and media outlets announcing news, events, or updates about an organisation, written in a journalistic style.", hint:"Always answers: Who, What, When, Where, Why." },
+  { topic:"Media Relations", term:"Media Pitch", def:"A personalised, concise proposal sent to a specific journalist suggesting a story idea, angle, or interview that would interest their audience.", hint:"One journalist, one story idea, one shot." },
+  { topic:"Media Relations", term:"Earned Media", def:"Coverage or publicity gained through non-paid channels — such as news articles, reviews, or social mentions — earned through newsworthiness, not advertising.", hint:"Can't buy it; you earn it." },
+  { topic:"Media Relations", term:"Press Conference", def:"A scheduled public event where an organisation invites journalists to hear an announcement and ask questions from a designated spokesperson.", hint:"High-stakes, real-time interaction with the press." },
+
+  // Crisis Communication
+  { topic:"Crisis Communication", term:"Crisis Communication", def:"A specialised form of PR that manages the flow of information, controls messaging, and protects an organisation's reputation during a negative or emergency event.", hint:"Speed, honesty, and control are everything." },
+  { topic:"Crisis Communication", term:"Crisis Communication Plan", def:"A pre-prepared strategic document outlining roles, key messages, channels, and protocols for responding to emergencies or reputational threats before they occur.", hint:"The plan you hope you'll never use." },
+  { topic:"Crisis Communication", term:"Spokesperson", def:"A designated individual authorised to speak officially on behalf of an organisation during a crisis or major announcement, ensuring consistent and controlled messaging.", hint:"One voice, one message." },
+  { topic:"Crisis Communication", term:"Issue Management", def:"The proactive process of identifying, monitoring, and responding to emerging issues before they escalate into full-blown crises.", hint:"Prevention is better than a cure." },
+  { topic:"Crisis Communication", term:"Reputational Risk", def:"The potential for negative publicity, public backlash, or loss of stakeholder trust caused by an organisation's actions, inactions, or associations.", hint:"What's at stake when things go wrong." },
+
+  // Branding
+  { topic:"Branding", term:"Brand Identity", def:"The visual and verbal elements — including logo, colour palette, tone of voice, and messaging — that collectively represent how an organisation presents itself to the world.", hint:"It's not just a logo; it's the whole personality." },
+  { topic:"Branding", term:"Brand Positioning", def:"The deliberate strategy of establishing a distinct place in the minds of a target audience relative to competitors, focusing on key differentiators.", hint:"Why should they choose you over anyone else?" },
+  { topic:"Branding", term:"Corporate Social Responsibility (CSR)", def:"A business model in which companies integrate social and environmental concerns into their operations and stakeholder interactions beyond legal obligations.", hint:"Doing good as part of doing business." },
+  { topic:"Branding", term:"Reputation Management", def:"The ongoing practice of monitoring, influencing, and protecting how an organisation is perceived by its stakeholders, media, and the general public.", hint:"Guard the brand, always." },
+  { topic:"Branding", term:"Brand Ambassador", def:"A person — often an employee, celebrity, or influencer — who represents and promotes a brand's values and messaging in an authentic and sustained way.", hint:"A human face for the brand." },
+
+  // Communication Strategy
+  { topic:"Communication Strategy", term:"PESO Model", def:"A framework categorising media as Paid, Earned, Shared, and Owned — used to plan integrated communications campaigns across all available channels.", hint:"Four letters, four channels, one plan." },
+  { topic:"Communication Strategy", term:"Key Messages", def:"The core statements an organisation wants its target audiences to understand and remember, crafted to be clear, consistent, and repeated across all communications.", hint:"If you remember nothing else, remember this." },
+  { topic:"Communication Strategy", term:"Stakeholder Mapping", def:"The process of identifying, categorising, and prioritising individuals or groups who have an interest in or are affected by an organisation's activities.", hint:"Know who matters and why." },
+  { topic:"Communication Strategy", term:"RACE Framework", def:"A PR planning model standing for Research, Action, Communication, and Evaluation — providing a structured approach to planning and measuring campaigns.", hint:"Plan → Do → Tell → Measure." },
+  { topic:"Communication Strategy", term:"Two-Way Communication", def:"A communication model in which both sender and receiver actively exchange messages and feedback, fostering dialogue and relationship-building rather than one-way broadcasting.", hint:"Listen as much as you speak." },
+];
+
+const QUIZ_QUESTIONS = [
+  { topic:"Media Relations", q:"Which of the following best describes 'earned media'?", options:["Paid advertisements placed in newspapers","Coverage gained through merit, newsworthiness, or relationship-building","Social media posts published on a brand's own channels","Sponsored content disclosed as advertising"], answer:1, explain:"Earned media is publicity gained without payment — journalists, bloggers, and the public cover your story because it's genuinely newsworthy or compelling." },
+  { topic:"Media Relations", q:"A PR professional sends a targeted story idea to a specific journalist. What is this called?", options:["A press release","A media pitch","A press conference","A media audit"], answer:1, explain:"A media pitch is personalised and targeted at one journalist with a specific story angle, unlike a press release which is distributed broadly." },
+  { topic:"Media Relations", q:"Which element is MOST important in a press release?", options:["A catchy headline and clear lead paragraph","Detailed financial data","A long company history section","Quotes from all executives"], answer:0, explain:"A strong headline and clear opening paragraph ensure journalists immediately understand the story's newsworthiness. The most important facts come first (inverted pyramid style)." },
+  { topic:"Media Relations", q:"What is the primary purpose of a press conference?", options:["To train new PR staff","To allow journalists to question a spokesperson in real time about a significant announcement","To distribute printed materials to the public","To conduct market research"], answer:1, explain:"Press conferences are high-stakes events used for major announcements where real-time Q&A with journalists is expected and managed." },
+  { topic:"Crisis Communication", q:"What is the FIRST priority in crisis communication?", options:["Drafting a press release","Identifying and briefing a spokesperson","Protecting the organisation's reputation by controlling information flow promptly","Launching a social media campaign"], answer:2, explain:"Speed and control of accurate information are critical in a crisis. Delayed or inaccurate messaging can dramatically worsen reputational damage." },
+  { topic:"Crisis Communication", q:"A company discovers a product defect that could harm customers. Before any media inquiry, what should they consult first?", options:["Their advertising budget","Their crisis communication plan","Their social media analytics","Their annual report"], answer:1, explain:"A crisis communication plan outlines pre-approved protocols, key messages, and roles so the team can act swiftly and consistently when a crisis emerges." },
+  { topic:"Crisis Communication", q:"What is 'issue management' in PR?", options:["Managing press releases after a crisis has occurred","Reactively dealing with negative media coverage","Proactively identifying and addressing potential problems before they become crises","Monitoring competitor activities"], answer:2, explain:"Issue management is a proactive discipline — identifying emerging risks and addressing them early before they escalate into full crises requiring reactive communication." },
+  { topic:"Crisis Communication", q:"Why is it important to have a single designated spokesperson during a crisis?", options:["It saves money on PR costs","It ensures consistent, controlled messaging and avoids contradictions","It satisfies legal requirements in all industries","It eliminates the need for a communication plan"], answer:1, explain:"Multiple spokespersons risk contradicting each other, creating confusion, and amplifying the crisis. One voice maintains clarity and credibility." },
+  { topic:"Branding", q:"Brand positioning is BEST described as:", options:["The process of designing a company logo","Creating a distinct, valued place in the mind of a target audience relative to competitors","Measuring brand awareness through surveys","Managing a company's social media presence"], answer:1, explain:"Brand positioning is a strategic exercise — defining what makes you uniquely valuable to a specific audience, relative to all alternatives available to them." },
+  { topic:"Branding", q:"Which of the following is an example of Corporate Social Responsibility (CSR)?", options:["A company launching a new advertising campaign","A company reducing its carbon footprint and publishing annual sustainability reports","A company increasing its marketing budget","A company rebranding its logo"], answer:1, explain:"CSR refers to voluntary actions that integrate social and environmental responsibility into business operations — going beyond profit-making to benefit society." },
+  { topic:"Branding", q:"What does 'brand identity' encompass?", options:["Only the company logo","Only the colour palette used in marketing materials","The full set of visual and verbal elements representing how an organisation presents itself","The financial performance of a brand"], answer:2, explain:"Brand identity is holistic — it includes logo, colours, typography, tone of voice, taglines, and messaging. All elements work together to create a coherent personality." },
+  { topic:"Branding", q:"A well-known athlete publicly endorses and represents a sportswear company over several years. This person is best described as a:", options:["Press officer","Brand ambassador","Media analyst","Crisis manager"], answer:1, explain:"A brand ambassador is someone who consistently represents and promotes a brand's values in an authentic, sustained way — often a public figure or loyal customer." },
+  { topic:"Communication Strategy", q:"In the PESO model, what does the 'O' stand for?", options:["Outbound","Online","Owned","Outreach"], answer:2, explain:"PESO stands for Paid, Earned, Shared, and Owned. 'Owned' media refers to channels the organisation controls directly — website, blog, newsletters, etc." },
+  { topic:"Communication Strategy", q:"What is the purpose of stakeholder mapping?", options:["To create a list of journalists to contact","To identify, categorise, and prioritise individuals or groups affected by an organisation's activities","To measure the ROI of a communications campaign","To audit a company's owned media channels"], answer:1, explain:"Stakeholder mapping helps PR professionals understand who has interest or influence in the organisation so they can tailor communications and engagement appropriately." },
+  { topic:"Communication Strategy", q:"In the RACE framework, what does the 'E' stand for?", options:["Engagement","Execution","Evaluation","Earned media"], answer:2, explain:"RACE = Research, Action, Communication, Evaluation. The Evaluation stage measures whether objectives were met, informing future planning and demonstrating value." },
+  { topic:"Communication Strategy", q:"Key messages in PR are designed to be:", options:["Long and comprehensive, covering all topics","Clear, consistent, and repeated across all communications","Different for every audience to maximise relevance","Changed frequently to stay current"], answer:1, explain:"Key messages are the core ideas you want audiences to remember. Consistency and repetition across all channels reinforce understanding and trust." },
+  { topic:"Communication Strategy", q:"Two-way communication differs from one-way broadcasting because it:", options:["Uses social media exclusively","Is more expensive to implement","Involves active exchange of feedback and dialogue with the audience","Only works for internal communications"], answer:2, explain:"Two-way communication is fundamentally relational — it values listening and responding, not just sending messages. It's the foundation of modern PR practice." },
+  { topic:"Media Relations", q:"Which of these is the BEST approach when a journalist asks a difficult question you're not prepared for?", options:["Refuse to comment entirely","Provide any answer quickly to avoid silence","Acknowledge the question, stay on key messages, and offer to follow up with more detail","Change the subject immediately"], answer:2, explain:"Staying on key messages while acknowledging the question maintains credibility. Offering to follow up shows goodwill without making uninformed statements." },
+  { topic:"Crisis Communication", q:"'Reputational risk' in PR refers to:", options:["The financial cost of a PR campaign","The potential damage to an organisation's standing caused by negative events or perceptions","The risk of hiring the wrong PR agency","The risk of over-investing in owned media"], answer:1, explain:"Reputational risk captures all the ways an organisation's image could be harmed — through its own actions, external events, or stakeholder perceptions — making risk management a core PR function." },
+  { topic:"Branding", q:"Reputation management is BEST described as:", options:["A one-time rebranding exercise","The ongoing practice of monitoring and influencing how an organisation is perceived by stakeholders","Managing only social media comments","Responding to media inquiries during a crisis"], answer:1, explain:"Reputation management is continuous and proactive — it encompasses monitoring sentiment, shaping perceptions, and protecting brand image across all stakeholder groups at all times." },
+];
+
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+let fcFilter = "All";
+let fcFiltered = [...FLASHCARDS];
+let fcIndex = 0;
+let fcReviewed = new Set();
+let fcMastery = {}; // index -> 'know' | 'review'
+
+let quizIndex = 0;
+let quizScore = 0;
+let quizAnswered = false;
+let quizOrder = [];
+
+let quizHistory = []; // {score, total, date}
+let quizBestScore = 0;
+
+// ══════════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════════
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  if (id === 'progress') renderProgress();
+}
+
+// ══════════════════════════════════════════════
+//  FLASHCARDS
+// ══════════════════════════════════════════════
+function buildTopicFilter() {
+  const div = document.getElementById('fc-filter');
+  const topics = ['All', ...Object.keys(TOPICS)];
+  div.innerHTML = topics.map(t =>
+    `<button class="filter-btn${t==='All'?' active':''}" onclick="setFCFilter('${t}',this)">${t}</button>`
+  ).join('');
+}
+
+function setFCFilter(topic, btn) {
+  fcFilter = topic;
+  fcFiltered = topic === 'All' ? [...FLASHCARDS] : FLASHCARDS.filter(c => c.topic === topic);
+  fcIndex = 0;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  unflipCard();
+  renderCard();
+}
+
+function renderCard() {
+  const card = fcFiltered[fcIndex];
+  if (!card) return;
+  const globalIdx = FLASHCARDS.indexOf(card);
+  document.getElementById('fc-term').textContent = card.term;
+  document.getElementById('fc-def').textContent = card.def;
+  document.getElementById('fc-hint').textContent = card.hint ? `💡 ${card.hint}` : '';
+  document.getElementById('fc-topic-badge').textContent = card.topic;
+  document.getElementById('fc-topic-badge').style.background = TOPICS[card.topic] + '18';
+  document.getElementById('fc-topic-badge').style.borderColor = TOPICS[card.topic];
+  document.getElementById('fc-topic-badge').style.color = TOPICS[card.topic];
+  document.getElementById('fc-counter').textContent = `Card ${fcIndex+1} of ${fcFiltered.length}`;
+
+  // mastery buttons
+  const state = fcMastery[globalIdx];
+  document.querySelectorAll('.mastery-btn').forEach(b => b.classList.remove('active'));
+  if (state === 'know') document.querySelector('.mastery-btn.know').classList.add('active');
+  if (state === 'review') document.querySelector('.mastery-btn.review').classList.add('active');
+
+  updateFCProgress();
+}
+
+function flipCard() {
+  document.getElementById('card-scene').classList.toggle('flipped');
+  const card = fcFiltered[fcIndex];
+  const globalIdx = FLASHCARDS.indexOf(card);
+  fcReviewed.add(globalIdx);
+  updateFCProgress();
+}
+
+function unflipCard() {
+  document.getElementById('card-scene').classList.remove('flipped');
+}
+
+function nextCard() {
+  if (fcIndex < fcFiltered.length - 1) { fcIndex++; unflipCard(); setTimeout(renderCard, 50); }
+}
+function prevCard() {
+  if (fcIndex > 0) { fcIndex--; unflipCard(); setTimeout(renderCard, 50); }
+}
+function shuffleCards() {
+  fcFiltered = fcFiltered.sort(() => Math.random() - 0.5);
+  fcIndex = 0; unflipCard(); renderCard();
+}
+
+function markCard(type) {
+  const card = fcFiltered[fcIndex];
+  const globalIdx = FLASHCARDS.indexOf(card);
+  if (fcMastery[globalIdx] === type) { delete fcMastery[globalIdx]; }
+  else { fcMastery[globalIdx] = type; }
+  fcReviewed.add(globalIdx);
+  renderCard();
+  updateFCProgress();
+  saveProgress();
+}
+
+function updateFCProgress() {
+  const total = FLASHCARDS.length;
+  const reviewed = fcReviewed.size;
+  document.getElementById('fc-progress-text').textContent = `${reviewed} / ${total}`;
+  document.getElementById('fc-progress-fill').style.width = `${(reviewed/total)*100}%`;
+}
+
+// ══════════════════════════════════════════════
+//  QUIZ
+// ══════════════════════════════════════════════
+function initQuiz() {
+  quizOrder = QUIZ_QUESTIONS.map((_,i)=>i).sort(()=>Math.random()-0.5);
+  quizIndex = 0; quizScore = 0; quizAnswered = false;
+  document.getElementById('quiz-main').style.display = 'block';
+  document.getElementById('quiz-results').style.display = 'none';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const qi = quizOrder[quizIndex];
+  const q = QUIZ_QUESTIONS[qi];
+  quizAnswered = false;
+
+  document.getElementById('q-number').textContent = `Question ${quizIndex+1} of ${QUIZ_QUESTIONS.length}`;
+  document.getElementById('q-topic').textContent = q.topic;
+  document.getElementById('q-topic').style.background = TOPICS[q.topic]+'18';
+  document.getElementById('q-topic').style.borderColor = TOPICS[q.topic];
+  document.getElementById('q-topic').style.color = TOPICS[q.topic];
+  document.getElementById('q-text').textContent = q.q;
+
+  const optDiv = document.getElementById('options');
+  optDiv.innerHTML = q.options.map((o,i) =>
+    `<button class="option-btn" onclick="selectOption(${i})">${String.fromCharCode(65+i)}. ${o}</button>`
+  ).join('');
+
+  const fb = document.getElementById('feedback-box');
+  fb.className = 'feedback-box'; fb.innerHTML = '';
+
+  document.getElementById('next-q-btn').style.display = 'none';
+  updateQuizProgress();
+  updateQuizScore();
+}
+
+function selectOption(selected) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+
+  const qi = quizOrder[quizIndex];
+  const q = QUIZ_QUESTIONS[qi];
+  const correct = q.answer === selected;
+  if (correct) quizScore++;
+
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach((b,i) => {
+    b.disabled = true;
+    if (i === q.answer) b.classList.add('correct');
+    if (i === selected && !correct) b.classList.add('incorrect');
+  });
+
+  const fb = document.getElementById('feedback-box');
+  fb.className = `feedback-box show ${correct?'correct':'incorrect'}`;
+  fb.innerHTML = `<strong>${correct ? '✓ Correct!' : '✗ Not quite.'}</strong>${q.explain}`;
+
+  document.getElementById('next-q-btn').style.display = 'inline-block';
+  updateQuizScore();
+  saveProgress();
+}
+
+function nextQuestion() {
+  quizIndex++;
+  if (quizIndex >= QUIZ_QUESTIONS.length) { showResults(); return; }
+  renderQuestion();
+}
+
+function updateQuizProgress() {
+  const pct = Math.round((quizIndex / QUIZ_QUESTIONS.length) * 100);
+  document.getElementById('quiz-progress-label').textContent = `Question ${quizIndex+1} of ${QUIZ_QUESTIONS.length}`;
+  document.getElementById('quiz-pct').textContent = pct + '%';
+  document.getElementById('quiz-progress-fill').style.width = pct + '%';
+}
+
+function updateQuizScore() {
+  const answered = quizAnswered ? quizIndex+1 : quizIndex;
+  document.getElementById('quiz-score-badge').textContent = `Score: ${quizScore} / ${answered}`;
+}
+
+function showResults() {
+  document.getElementById('quiz-main').style.display = 'none';
+  document.getElementById('quiz-results').style.display = 'block';
+  const total = QUIZ_QUESTIONS.length;
+  const pct = Math.round((quizScore/total)*100);
+  document.getElementById('r-score').textContent = pct + '%';
+  document.getElementById('r-correct').textContent = quizScore;
+  document.getElementById('r-wrong').textContent = total - quizScore;
+  document.getElementById('r-total').textContent = total;
+  const msg = pct >= 80 ? '🎉 Excellent work! You have a strong command of PR concepts.'
+    : pct >= 60 ? '👍 Good effort! Review a few flashcards and try again to boost your score.'
+    : '📚 Keep studying! Use the flashcards to reinforce the concepts and retake the quiz.';
+  document.getElementById('r-message').textContent = msg;
+
+  // save to history
+  quizHistory.push({ score: quizScore, total, pct, date: new Date().toLocaleDateString() });
+  if (pct > quizBestScore) quizBestScore = pct;
+  saveProgress();
+}
+
+function restartQuiz() { initQuiz(); }
+
+// ══════════════════════════════════════════════
+//  PROGRESS
+// ══════════════════════════════════════════════
+function renderProgress() {
+  const total = FLASHCARDS.length;
+  const reviewed = fcReviewed.size;
+  const known = Object.values(fcMastery).filter(v=>v==='know').length;
+  const toReview = Object.values(fcMastery).filter(v=>v==='review').length;
+  const lastQuiz = quizHistory.length ? quizHistory[quizHistory.length-1].pct + '%' : '—';
+  const best = quizBestScore ? quizBestScore + '%' : '—';
+  const attempts = quizHistory.length;
+
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card"><div class="stat-num">${reviewed}/${total}</div><div class="stat-label">Cards Reviewed</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#2a7a4b">${known}</div><div class="stat-label">Marked "Got It"</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#d4a843">${toReview}</div><div class="stat-label">Marked "Review"</div></div>
+    <div class="stat-card"><div class="stat-num">${lastQuiz}</div><div class="stat-label">Last Quiz Score</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#c8402a">${best}</div><div class="stat-label">Best Score</div></div>
+    <div class="stat-card"><div class="stat-num">${attempts}</div><div class="stat-label">Quiz Attempts</div></div>
+  `;
+
+  const topicDiv = document.getElementById('topic-progress');
+  topicDiv.innerHTML = Object.entries(TOPICS).map(([topic, color]) => {
+    const cards = FLASHCARDS.filter(c=>c.topic===topic);
+    const cardIdxs = cards.map(c=>FLASHCARDS.indexOf(c));
+    const rev = cardIdxs.filter(i=>fcReviewed.has(i)).length;
+    const pct = Math.round((rev/cards.length)*100);
+    return `<div class="tp-row">
+      <div class="tp-label"><span>${topic}</span><span>${rev}/${cards.length} reviewed (${pct}%)</span></div>
+      <div class="tp-bar"><div class="tp-fill" style="width:${pct}%;background:${color}"></div></div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+//  PERSISTENCE (localStorage)
+// ══════════════════════════════════════════════
+function saveProgress() {
+  try {
+    localStorage.setItem('prm_reviewed', JSON.stringify([...fcReviewed]));
+    localStorage.setItem('prm_mastery', JSON.stringify(fcMastery));
+    localStorage.setItem('prm_history', JSON.stringify(quizHistory));
+    localStorage.setItem('prm_best', quizBestScore);
+  } catch(e) {}
+}
+
+function loadProgress() {
+  try {
+    const r = localStorage.getItem('prm_reviewed');
+    if (r) fcReviewed = new Set(JSON.parse(r));
+    const m = localStorage.getItem('prm_mastery');
+    if (m) fcMastery = JSON.parse(m);
+    const h = localStorage.getItem('prm_history');
+    if (h) quizHistory = JSON.parse(h);
+    const b = localStorage.getItem('prm_best');
+    if (b) quizBestScore = parseInt(b);
+  } catch(e) {}
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+loadProgress();
+buildTopicFilter();
+renderCard();
+initQuiz();
+</script>
+</body>
+</html>
